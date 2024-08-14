@@ -1,0 +1,10 @@
+{
+  "extensionDescription": {
+    "description": "Forgetting to drink water is a common problem. This extension will remind you to drink water every n minutes.",
+    "message": "Forgetting to drink water is a common problem."
+  },
+  "extensionName": {
+    "description": "An extension to remind you to drink water",
+    "message": "Water Reminder"
+  }
+}
