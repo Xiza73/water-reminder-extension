@@ -2,23 +2,23 @@ import { BaseStorage, createStorage, StorageType } from './base';
 
 interface DrinkState {
   isInProgress: boolean;
-  mililiters: number;
-  mililitersPercent: number;
+  currentUnits: number;
+  currentPercent: number;
   time: string;
 }
 
 type DrinkStorage = BaseStorage<DrinkState> & {
   setInProgress: (isInProgress: boolean) => Promise<void>;
-  setMililiters: (mililiters: number) => Promise<void>;
-  setMililitersPercent: (mililitersPercent: number) => Promise<void>;
-  setTime: (time: string) => Promise<void>;
+  setCurrentUnits: (currentUnits: number) => Promise<void>;
+  setCurrentPercent: (currentPercent: number) => Promise<void>;
+  setLastTime: (time: string) => Promise<void>;
   reset: () => Promise<void>;
 };
 
 const initialState: DrinkState = {
   isInProgress: false,
-  mililiters: 0,
-  mililitersPercent: 0,
+  currentUnits: 0,
+  currentPercent: 0,
   time: '',
 };
 
@@ -32,13 +32,13 @@ export const drinkStorage: DrinkStorage = {
   setInProgress: async (isInProgress: boolean) => {
     await storage.set(state => ({ ...state, isInProgress }));
   },
-  setMililiters: async (mililiters: number) => {
-    await storage.set(state => ({ ...state, mililiters }));
+  setCurrentUnits: async (currentUnits: number) => {
+    await storage.set(state => ({ ...state, currentUnits }));
   },
-  setMililitersPercent: async (mililitersPercent: number) => {
-    await storage.set(state => ({ ...state, mililitersPercent }));
+  setCurrentPercent: async (currentPercent: number) => {
+    await storage.set(state => ({ ...state, currentPercent }));
   },
-  setTime: async (time: string) => {
+  setLastTime: async (time: string) => {
     await storage.set(state => ({ ...state, time }));
   },
   reset: async () => {

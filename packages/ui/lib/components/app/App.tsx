@@ -17,10 +17,10 @@ export type AppProps = {
   time: string;
   isInProgress: boolean;
 
-  setMililiters: (currentUnits: number) => Promise<void>;
+  setCurrentUnits: (currentUnits: number) => Promise<void>;
   setInProgress: (isInProgress: boolean) => Promise<void>;
-  setTime: (time: string) => Promise<void>;
-  setMililitersPercent: (currentPercent: number) => Promise<void>;
+  setLastTime: (time: string) => Promise<void>;
+  setCurrentPercent: (currentPercent: number) => Promise<void>;
 } & ComponentPropsWithoutRef<'div'>;
 
 export const App: React.FC<AppProps> = ({
@@ -32,10 +32,10 @@ export const App: React.FC<AppProps> = ({
   time,
   isInProgress,
 
-  setMililiters,
+  setCurrentUnits,
   setInProgress,
-  setTime,
-  setMililitersPercent,
+  setLastTime,
+  setCurrentPercent,
 
   className,
   ...props
@@ -59,9 +59,9 @@ export const App: React.FC<AppProps> = ({
 
     const interval = setInterval(async () => {
       if (diff === 0 || provisionalPercent === newMililitersPercent) {
-        await setMililiters(newMililiters);
+        await setCurrentUnits(newMililiters);
         await setInProgress(false);
-        if (isReset) await setTime('');
+        if (isReset) await setLastTime('');
         clearInterval(interval);
         return;
       }
@@ -72,7 +72,7 @@ export const App: React.FC<AppProps> = ({
         provisionalPercent += 1;
       }
 
-      await setMililitersPercent(provisionalPercent);
+      await setCurrentPercent(provisionalPercent);
     }, 16);
   };
 
@@ -86,7 +86,7 @@ export const App: React.FC<AppProps> = ({
     const fixMinutes = minutes < 10 ? `0${minutes}` : minutes;
     const time = `${fixHours}:${fixMinutes}`;
 
-    await setTime(time);
+    await setLastTime(time);
   };
 
   const handleClick = () => {
