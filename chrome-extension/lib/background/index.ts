@@ -5,12 +5,14 @@ exampleThemeStorage.get().then(theme => {
   console.log('theme', theme);
 });
 
-drinkStorage.get().then(() => {
-  drinkStorage.reset();
+drinkStorage.get().then(state => {
+  // drinkStorage.reset();
+  console.log('state', state);
 });
 
-optionsStorage.get().then(() => {
-  optionsStorage.reset();
+optionsStorage.get().then(state => {
+  // optionsStorage.reset();
+  console.log('options', state);
 });
 
 console.log('background loaded');

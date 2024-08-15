@@ -250,40 +250,7 @@
   }
 }
 
-.reset-icon {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  cursor: pointer;
-  color: #fff;
-  font-size: 1.5rem;
-  z-index: 20;
-}
-
-.tracker {
-  position: absolute;
-  top: 10%;
-  left: 0;
-  width: 100%;
-  color: #fff;
-  text-align: center;
-  height: 74px;
-  overflow: hidden;
-  z-index: 20;
-}
-
-.tracker__inner {
-  transition: transform 0.2s ease-in-out;
-}
-
-.tracker__item {
-  transition: opacity 0.2s ease-in-out;
-  font-size: 1.1rem;
-  padding-bottom: 10px;
-  opacity: 0.7;
-}
-
-.tracker__item_active {
+.progress__item_active {
   opacity: 1;
 }
 
