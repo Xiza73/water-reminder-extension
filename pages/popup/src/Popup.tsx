@@ -4,7 +4,7 @@ import { drinkStorage, optionsStorage } from '@extension/storage';
 import { App } from '@extension/ui';
 
 const Popup = () => {
-  const { isInProgress, currentUnits, currentPercent, time } = useStorageSuspense(drinkStorage);
+  const { isInProgress, currentUnits, currentPercent, count, time } = useStorageSuspense(drinkStorage);
   const { unit, unitsPerDrink, totalUnits } = useStorageSuspense(optionsStorage);
 
   return (
@@ -13,12 +13,14 @@ const Popup = () => {
       isInProgress={isInProgress}
       currentUnits={currentUnits}
       currentPercent={currentPercent}
+      count={count}
       time={time}
       totalUnits={totalUnits}
       unitsPerDrink={unitsPerDrink}
       setInProgress={drinkStorage.setInProgress}
       setCurrentUnits={drinkStorage.setCurrentUnits}
       setCurrentPercent={drinkStorage.setCurrentPercent}
+      setCount={drinkStorage.setCount}
       setLastTime={drinkStorage.setLastTime}
     />
   );

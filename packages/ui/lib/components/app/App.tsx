@@ -14,11 +14,13 @@ export type AppProps = {
   totalUnits: number;
   currentUnits: number;
   currentPercent: number;
+  count: number;
   time: string;
   isInProgress: boolean;
 
   setCurrentUnits: (currentUnits: number) => Promise<void>;
   setInProgress: (isInProgress: boolean) => Promise<void>;
+  setCount: (count: number) => Promise<void>;
   setLastTime: (time: string) => Promise<void>;
   setCurrentPercent: (currentPercent: number) => Promise<void>;
 } & ComponentPropsWithoutRef<'div'>;
@@ -29,11 +31,13 @@ export const App: React.FC<AppProps> = ({
   totalUnits,
   currentUnits,
   currentPercent,
+  count,
   time,
   isInProgress,
 
   setCurrentUnits,
   setInProgress,
+  setCount,
   setLastTime,
   setCurrentPercent,
 
@@ -60,6 +64,7 @@ export const App: React.FC<AppProps> = ({
     const interval = setInterval(async () => {
       if (diff === 0 || provisionalPercent === newMililitersPercent) {
         await setCurrentUnits(newMililiters);
+        await setCount(Math.floor(newMililiters / unitsPerDrink));
         await setInProgress(false);
         if (isReset) await setLastTime('');
         clearInterval(interval);
@@ -107,7 +112,7 @@ export const App: React.FC<AppProps> = ({
       <div className={`page ${isInProgress ? 'page_animated' : ''}`} id="page">
         <ResetIcon onReset={handleReset} />
         <Tracker time={time} />
-        <Progress progress={`${currentUnits} ${unit}`} />
+        <Progress count={count} units={`${currentUnits} ${unit}`} />
         <Percent percent={currentPercent} />
         <DrinkButton onClick={handleClick} />
         <Water percent={currentPercent} />
