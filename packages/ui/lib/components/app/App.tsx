@@ -6,7 +6,10 @@ import { DrinkButton } from './DrinkButton';
 import { Water } from './Water';
 import { Progress } from './Progress';
 import { ComponentPropsWithoutRef } from 'react';
-import { cn } from '../../utils';
+import { cn, fixTime, rotateTracker } from '../../utils';
+
+const HOUR = 0;
+const MINUTE = 1;
 
 export type AppProps = {
   unit: string;
@@ -44,6 +47,40 @@ export const App: React.FC<AppProps> = ({
   className,
   ...props
 }) => {
+  const getProvisionalPartialTime = (partialTime: number, currentTime: number, intervals: number, isReset: boolean) => {
+    let partialTimeDiff = partialTime - currentTime;
+
+    if (!time || isReset) partialTimeDiff = partialTime;
+
+    const provisionalTime = time ? currentTime : 0;
+    const decimalTime = provisionalTime;
+
+    let addPerInterval = Math.abs(partialTimeDiff) / intervals;
+    addPerInterval = addPerInterval < 1 ? addPerInterval : Math.floor(addPerInterval);
+
+    return {
+      provisionalTime,
+      decimalTime,
+      addPerInterval,
+    };
+  };
+
+  const getProvisionalCount = (goalCount: number, currentCount: number, intervals: number) => {
+    const countDiff = goalCount - currentCount;
+
+    const provisionalCount = currentCount;
+    const decimalCount = provisionalCount;
+
+    let countToAddPerInterval = Math.abs(countDiff) / intervals;
+    countToAddPerInterval = countToAddPerInterval < 1 ? countToAddPerInterval : Math.floor(countToAddPerInterval);
+
+    return {
+      provisionalCount,
+      decimalCount,
+      countToAddPerInterval,
+    };
+  };
+
   const drink = async ({ toDrink, isReset } = { toDrink: unitsPerDrink, isReset: false }) => {
     if (unitsPerDrink === 0 || totalUnits === 0) return;
     if (toDrink > 0 && currentUnits + toDrink > totalUnits) return;
@@ -51,47 +88,97 @@ export const App: React.FC<AppProps> = ({
 
     await setInProgress(true);
 
-    await rotateTracker(isReset);
+    const { hours, minutes } = await rotateTracker();
+    const newUnits = currentUnits + toDrink;
+    const newCount = Math.floor(newUnits / unitsPerDrink);
+    let newPercent = (newUnits / totalUnits) * 100;
+    newPercent = newPercent > 100 ? 100 : newPercent;
+    newPercent = Math.round(newPercent);
 
-    const newMililiters = currentUnits + toDrink;
-    let newMililitersPercent = (newMililiters / totalUnits) * 100;
-    newMililitersPercent = newMililitersPercent > 100 ? 100 : newMililitersPercent;
-    newMililitersPercent = Math.round(newMililitersPercent);
-
-    const diff = currentPercent - newMililitersPercent;
+    const diff = currentPercent - newPercent;
+    const isFill = diff > 0;
+    let provisionalUnits = currentUnits;
     let provisionalPercent = currentPercent;
 
+    const intervals = Math.abs(diff);
+    let {
+      provisionalTime: provisionalHours,
+      decimalTime: decimalHours,
+      // eslint-disable-next-line prefer-const
+      addPerInterval: hoursToAddPerInterval,
+    } = getProvisionalPartialTime(hours, parseInt(time.split(':')[HOUR]), intervals, isReset);
+    let {
+      provisionalTime: provisionalMinutes,
+      decimalTime: decimalMinutes,
+      // eslint-disable-next-line prefer-const
+      addPerInterval: minutesToAddPerInterval,
+    } = getProvisionalPartialTime(minutes, parseInt(time.split(':')[MINUTE]), intervals, isReset);
+    const unitsToAddPerInterval = Math.round(Math.abs(toDrink) / intervals);
+    let {
+      provisionalCount,
+      decimalCount,
+      // eslint-disable-next-line prefer-const
+      countToAddPerInterval,
+    } = getProvisionalCount(newCount, count, intervals);
+
     const interval = setInterval(async () => {
-      if (diff === 0 || provisionalPercent === newMililitersPercent) {
-        await setCurrentUnits(newMililiters);
-        await setCount(Math.floor(newMililiters / unitsPerDrink));
+      if (diff === 0 || provisionalPercent === newPercent) {
+        console.log('clear');
+        await setCurrentUnits(newUnits);
+        await setCount(newCount);
         await setInProgress(false);
-        if (isReset) await setLastTime('');
+        await setLastTime(isReset ? '' : fixTime(hours, minutes));
         clearInterval(interval);
         return;
       }
 
-      if (diff > 0) {
+      if (isFill) {
+        provisionalUnits -= unitsToAddPerInterval;
         provisionalPercent -= 1;
+        decimalCount -= countToAddPerInterval;
+        if (Math.ceil(decimalCount) !== provisionalCount) {
+          provisionalCount = Math.ceil(decimalCount);
+          decimalCount = provisionalCount;
+        }
       } else {
+        provisionalUnits += unitsToAddPerInterval;
         provisionalPercent += 1;
+        decimalCount += countToAddPerInterval;
+        if (Math.floor(decimalCount) !== provisionalCount) {
+          provisionalCount = Math.floor(decimalCount);
+          decimalCount = provisionalCount;
+        }
       }
 
+      if (isReset) {
+        decimalHours -= hoursToAddPerInterval;
+        if (Math.ceil(decimalHours) !== provisionalHours) {
+          provisionalHours = Math.ceil(decimalHours);
+          decimalHours = provisionalHours;
+        }
+        decimalMinutes -= minutesToAddPerInterval;
+        if (Math.ceil(decimalMinutes) !== provisionalMinutes) {
+          provisionalMinutes = Math.ceil(decimalMinutes);
+          decimalMinutes = provisionalMinutes;
+        }
+      } else {
+        decimalHours += hoursToAddPerInterval;
+        if (Math.floor(decimalHours) !== provisionalHours) {
+          provisionalHours = Math.floor(decimalHours);
+          decimalHours = provisionalHours;
+        }
+        decimalMinutes += minutesToAddPerInterval;
+        if (Math.floor(decimalMinutes) !== provisionalMinutes) {
+          provisionalMinutes = Math.floor(decimalMinutes);
+          decimalMinutes = provisionalMinutes;
+        }
+      }
+
+      await setLastTime(fixTime(provisionalHours, provisionalMinutes));
+      await setCurrentUnits(provisionalUnits);
       await setCurrentPercent(provisionalPercent);
-    }, 16);
-  };
-
-  const rotateTracker = async (isReset = false) => {
-    if (isReset) return;
-
-    const date = new Date();
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const fixHours = hours < 10 ? `0${hours}` : hours;
-    const fixMinutes = minutes < 10 ? `0${minutes}` : minutes;
-    const time = `${fixHours}:${fixMinutes}`;
-
-    await setLastTime(time);
+      await setCount(provisionalCount);
+    }, 20);
   };
 
   const handleClick = () => {
