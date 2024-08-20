@@ -180,6 +180,25 @@ importers:
       fflate: 0.8.2
       tsx: 4.17.0
 
+  pages/alarm:
+    specifiers:
+      '@extension/shared': workspace:*
+      '@extension/storage': workspace:*
+      '@extension/tailwindcss-config': workspace:*
+      '@extension/tsconfig': workspace:*
+      '@extension/ui': workspace:*
+      '@extension/vite-config': workspace:*
+      sass: 1.77.8
+    dependencies:
+      '@extension/shared': link:../../packages/shared
+      '@extension/storage': link:../../packages/storage
+      '@extension/ui': link:../../packages/ui
+    devDependencies:
+      '@extension/tailwindcss-config': link:../../packages/tailwind-config
+      '@extension/tsconfig': link:../../packages/tsconfig
+      '@extension/vite-config': link:../../packages/vite-config
+      sass: 1.77.8
+
   pages/content:
     specifiers:
       '@extension/hmr': workspace:*

@@ -1,10 +1,12 @@
 import { useTheme } from '@extension/shared';
 import { useId } from 'react';
 import { Label } from './Label';
+import { cn } from '@extension/ui';
 
 export interface NumberInputProps {
   label: string;
   placeholder: string;
+  isDisabled?: boolean;
   value: string;
   setValue: (value: string) => void;
 }
@@ -17,7 +19,13 @@ const parseToNumber = (value: string) => {
   return newValue;
 };
 
-export const NumberInput: React.FC<NumberInputProps> = ({ label, placeholder, value, setValue }) => {
+export const NumberInput: React.FC<NumberInputProps> = ({
+  label,
+  placeholder,
+  isDisabled = false,
+  value,
+  setValue,
+}) => {
   const { isLight } = useTheme();
 
   const id = useId();
@@ -36,9 +44,17 @@ export const NumberInput: React.FC<NumberInputProps> = ({ label, placeholder, va
         placeholder={placeholder}
         value={value}
         onChange={handleChange}
-        className={`max-w-64 block mt-2 w-full placeholder-gray-400/70 rounded-lg border px-5 py-2.5 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40 ${
-          isLight ? 'border-gray-200 bg-white text-gray-700' : 'border-gray-600 bg-gray-900 text-gray-300'
-        }`}
+        disabled={isDisabled}
+        className={cn(
+          'max-w-64 block mt-2 w-full placeholder-gray-400/70 rounded-lg border px-5 py-2.5 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-40',
+          isLight
+            ? isDisabled
+              ? 'border-gray-200 bg-gray-200 text-gray-500'
+              : 'border-gray-200 bg-white text-gray-700'
+            : isDisabled
+              ? 'border-gray-600 bg-gray-600 text-gray-500'
+              : 'border-gray-600 bg-gray-900 text-gray-300',
+        )}
       />
     </div>
   );

@@ -2,7 +2,7 @@
  * Chrome reference error while running `processTailwindFeatures` in tailwindcss.
  *  To avoid this, we need to check if the globalThis.chrome is available and add fallback logic.
  */
-const chrome = globalThis.chrome;
+export const chrome = globalThis.chrome;
 
 /**
  * Storage area type for persisting and exchanging data.

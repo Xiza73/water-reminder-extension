@@ -11,6 +11,8 @@ interface OptionsState {
   unit: Unit;
   unitsPerDrink: number;
   totalUnits: number;
+  isReminderActive: boolean;
+  remindEvery: number;
 }
 
 type OptionsStorage = BaseStorage<OptionsState> & {
@@ -22,6 +24,8 @@ const initialState: OptionsState = {
   unit: Unit.ML,
   unitsPerDrink: 500,
   totalUnits: 2000,
+  isReminderActive: false,
+  remindEvery: 30,
 };
 
 const storage = createStorage<OptionsState>('options-storage', initialState, {
