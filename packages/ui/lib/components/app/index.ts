@@ -1,5 +1,6 @@
 export * from './App';
 export * from './DrinkButton';
+export * from './FillIcon';
 export * from './GlassIcon';
 export * from './Percent';
 export * from './Progress';

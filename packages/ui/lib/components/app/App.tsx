@@ -7,6 +7,7 @@ import { Water } from './Water';
 import { Progress } from './Progress';
 import { ComponentPropsWithoutRef } from 'react';
 import { cn, fixTime, rotateTracker } from '../../utils';
+import { FillIcon } from './FillIcon';
 
 const HOUR = 0;
 const MINUTE = 1;
@@ -194,6 +195,12 @@ export const App: React.FC<AppProps> = ({
     drink();
   };
 
+  const handleFill = () => {
+    if (isInProgress) return;
+
+    drink({ toDrink: -unitsPerDrink, isReset: false });
+  };
+
   const handleReset = async () => {
     if (isInProgress) return;
 
@@ -210,6 +217,14 @@ export const App: React.FC<AppProps> = ({
         <Percent percent={currentPercent} />
         <DrinkButton onClick={handleClick} />
         <Water percent={currentPercent} />
+        {Boolean(currentPercent) && (
+          <FillIcon
+            className="absolute top-2 left-2 cursor-pointer z-30 text-white"
+            width={24}
+            height={24}
+            onClick={handleFill}
+          />
+        )}
       </div>
     </div>
   );
