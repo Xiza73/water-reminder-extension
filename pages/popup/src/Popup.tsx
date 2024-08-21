@@ -22,6 +22,7 @@ const Popup = () => {
       setCurrentPercent={drinkStorage.setCurrentPercent}
       setCount={drinkStorage.setCount}
       setLastTime={drinkStorage.setLastTime}
+      isPopup
     />
   );
 };

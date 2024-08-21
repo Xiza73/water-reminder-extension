@@ -8,6 +8,7 @@ import { Progress } from './Progress';
 import { ComponentPropsWithoutRef } from 'react';
 import { cn, fixTime, rotateTracker } from '../../utils';
 import { FillIcon } from './FillIcon';
+import { GoalComplete } from './GoalComplete';
 
 const HOUR = 0;
 const MINUTE = 1;
@@ -21,6 +22,7 @@ export type AppProps = {
   count: number;
   time: string;
   isInProgress: boolean;
+  isPopup?: boolean;
 
   setCurrentUnits: (currentUnits: number) => Promise<void>;
   setInProgress: (isInProgress: boolean) => Promise<void>;
@@ -38,6 +40,7 @@ export const App: React.FC<AppProps> = ({
   count,
   time,
   isInProgress,
+  isPopup = false,
 
   setCurrentUnits,
   setInProgress,
@@ -214,6 +217,7 @@ export const App: React.FC<AppProps> = ({
         <ResetIcon onReset={handleReset} />
         <Tracker time={time} />
         <Progress count={count} units={`${currentUnits} ${unit}`} />
+        {currentPercent === 100 && <GoalComplete isPopup={isPopup} />}
         <Percent percent={currentPercent} />
         <DrinkButton onClick={handleClick} />
         <Water percent={currentPercent} />
