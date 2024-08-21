@@ -8,6 +8,7 @@ export interface NumberInputProps {
   placeholder: string;
   isDisabled?: boolean;
   value: string;
+  isDecimal?: boolean;
   setValue: (value: string) => void;
 }
 
@@ -19,11 +20,23 @@ const parseToNumber = (value: string) => {
   return newValue;
 };
 
+const parseToDecimal = (value: string) => {
+  value = value.replace(/[^0-9.]/g, '');
+  value = value.replace(/^\./g, '');
+  value = value.replace(/\.{2,}/g, '.');
+  value = value.replace(/\..*\./g, '.');
+  if (value.length > 1 && value[1] !== '.') value = value.replace(/^0+/g, '');
+  value = value.replace(/\.\d{3,}/, '.' + value.split('.')[1]?.slice(0, 2));
+  value = value === '' ? '0' : value;
+  return value;
+};
+
 export const NumberInput: React.FC<NumberInputProps> = ({
   label,
   placeholder,
   isDisabled = false,
   value,
+  isDecimal = false,
   setValue,
 }) => {
   const { isLight } = useTheme();
@@ -31,7 +44,9 @@ export const NumberInput: React.FC<NumberInputProps> = ({
   const id = useId();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(parseToNumber(e.target.value));
+    const newValue = isDecimal ? parseToDecimal(e.target.value) : parseToNumber(e.target.value);
+
+    setValue(newValue);
   };
 
   return (
