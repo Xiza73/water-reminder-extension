@@ -136,6 +136,7 @@ export const App: React.FC<AppProps> = ({
       if (diff === 0 || provisionalPercent === newPercent) {
         console.log('clear');
         await setCurrentUnits(newUnits);
+        await setCurrentPercent(newPercent);
         await setCount(newCount);
         await setInProgress(false);
         await setLastTime(isReset ? '' : fixTime(hours, minutes));
