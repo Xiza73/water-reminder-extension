@@ -22,6 +22,8 @@ export type AppProps = {
   count: number;
   time: string;
   isInProgress: boolean;
+
+  isLight: boolean;
   isPopup?: boolean;
 
   setCurrentUnits: (currentUnits: number) => Promise<void>;
@@ -40,6 +42,8 @@ export const App: React.FC<AppProps> = ({
   count,
   time,
   isInProgress,
+
+  isLight,
   isPopup = false,
 
   setCurrentUnits,
@@ -212,16 +216,16 @@ export const App: React.FC<AppProps> = ({
   };
 
   return (
-    <div className={cn(className, 'App')} {...props}>
+    <div className={cn(className, 'App', isLight ? 'bg-[#1B5887]' : 'bg-[#B4986F]')} {...props}>
       <Wave />
       <div className={`page ${isInProgress ? 'page_animated' : ''}`} id="page">
         <ResetIcon onReset={handleReset} />
         <Tracker time={time} />
-        <Progress count={count} units={`${currentUnits} ${unit}`} />
+        <Progress count={count} units={`${currentUnits} ${unit}`} isLight={isLight} />
         {currentPercent === 100 && <GoalComplete isPopup={isPopup} />}
         <Percent percent={currentPercent} />
         <DrinkButton onClick={handleClick} />
-        <Water percent={currentPercent} />
+        <Water percent={currentPercent} isLight={isLight} />
         {Boolean(currentPercent) && (
           <FillIcon
             className="absolute top-2 left-2 cursor-pointer z-30 text-white"

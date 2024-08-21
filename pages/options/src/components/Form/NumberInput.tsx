@@ -52,8 +52,8 @@ export const NumberInput: React.FC<NumberInputProps> = ({
               ? 'border-gray-200 bg-gray-200 text-gray-500'
               : 'border-gray-200 bg-white text-gray-700'
             : isDisabled
-              ? 'border-gray-600 bg-gray-600 text-gray-500'
-              : 'border-gray-600 bg-gray-900 text-gray-300',
+              ? 'border-[#362e2e] bg-[#4b4040] text-gray-500'
+              : 'border-[#241d1d] bg-[#3d2c2c] text-gray-300',
         )}
       />
     </div>

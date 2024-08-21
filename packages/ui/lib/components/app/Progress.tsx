@@ -1,13 +1,15 @@
 import { cn } from '../../utils';
 import { ComponentPropsWithoutRef } from 'react';
 import { GlassIcon } from './GlassIcon';
+import { CoffeeIcon } from './CoffeeIcon';
 
 export type ProgressProps = {
   count: number;
   units: string;
+  isLight: boolean;
 } & ComponentPropsWithoutRef<'div'>;
 
-export const Progress: React.FC<ProgressProps> = ({ count, units, className, ...props }) => {
+export const Progress: React.FC<ProgressProps> = ({ count, units, isLight, className, ...props }) => {
   return (
     <div
       className={cn(className, 'absolute top-24 left-0 w-full text-white text-center h-16 overflow-hidden z-20')}
@@ -15,7 +17,7 @@ export const Progress: React.FC<ProgressProps> = ({ count, units, className, ...
       <div className="transition-opacity duration-200 font-medium pb-1 opacity-70 ease-in-out">Progress</div>
       <div className="transition-transform duration-200 ease-in-out" id="tracker">
         <div className="transition-opacity duration-200 text-base font-medium opacity-100 ease-in-out flex justify-center">
-          {count} <GlassIcon /> - {units}
+          {count} {isLight ? <GlassIcon /> : <CoffeeIcon />} - {units}
         </div>
       </div>
     </div>

@@ -14,7 +14,6 @@
   box-sizing: border-box;
   outline: none;
   height: 480px;
-  background: #1b5887;
 }
 
 .page {
@@ -113,7 +112,6 @@
   z-index: 5;
   bottom: 0;
   left: 0;
-  background: #32bafa;
   transform: translate(0%, 50%);
 }
 
@@ -135,14 +133,12 @@
 .water__wave_back {
   right: 0;
   left: auto;
-  fill: #2c7fbe;
   -webkit-animation: wave-back 1.4s infinite linear;
   animation: wave-back 1.4s infinite linear;
 }
 
 .water__wave_front {
   left: 0;
-  fill: #32bafa;
   z-index: 999;
   margin-bottom: -1px;
   -webkit-animation: wave-front 0.7s infinite linear;

@@ -19,8 +19,6 @@ const Options = () => {
   const [reminderStatus, setReminderStatus] = useState(INACTIVE);
   const [remindEvery, setRemindEvery] = useState(storage.remindEvery.toString());
 
-  // createAlarm('drinkReminder', minutesToMilliseconds(1));
-
   const handleSave = async () => {
     await optionsStorage.setState({
       unit: unit as Unit,
@@ -41,7 +39,7 @@ const Options = () => {
 
   return (
     <div
-      className={`p-5 flex flex-col h-screen gap-5 relative ${isLight ? 'bg-sky-500 text-gray-900' : 'bg-sky-800 text-gray-300'}`}>
+      className={`p-5 flex flex-col h-screen gap-5 relative ${isLight ? 'bg-sky-500 text-gray-900' : 'bg-[#4a3c3c] text-gray-300'}`}>
       <ThemeButton position={Position.RIGHT} handleClick={exampleThemeStorage.toggle} isLight={isLight} />
       <h1 className="text-2xl font-bold mb-3">Settings</h1>
 
@@ -68,7 +66,7 @@ const Options = () => {
         />
       )}
 
-      <IconButton icon="" name="Save" onClick={handleSave} />
+      <IconButton icon="" name="Save" isLight={isLight} onClick={handleSave} />
     </div>
   );
 };

@@ -1,11 +1,12 @@
 import '@src/Popup.css';
-import { useStorageSuspense, withErrorBoundary, withSuspense } from '@extension/shared';
+import { useStorageSuspense, useTheme, withErrorBoundary, withSuspense } from '@extension/shared';
 import { drinkStorage, optionsStorage } from '@extension/storage';
 import { App } from '@extension/ui';
 
 const Popup = () => {
   const { isInProgress, currentUnits, currentPercent, count, time } = useStorageSuspense(drinkStorage);
   const { unit, unitsPerDrink, totalUnits } = useStorageSuspense(optionsStorage);
+  const { isLight } = useTheme();
 
   return (
     <App
@@ -23,6 +24,7 @@ const Popup = () => {
       setCount={drinkStorage.setCount}
       setLastTime={drinkStorage.setLastTime}
       isPopup
+      isLight={isLight}
     />
   );
 };

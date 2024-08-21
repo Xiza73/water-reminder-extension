@@ -1,4 +1,5 @@
 export * from './App';
+export * from './CoffeeIcon';
 export * from './DrinkButton';
 export * from './FillIcon';
 export * from './GlassIcon';
