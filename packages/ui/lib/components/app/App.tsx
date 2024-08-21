@@ -81,10 +81,17 @@ export const App: React.FC<AppProps> = ({
     };
   };
 
+  const isValidateForDrink = (toDrink: number) => {
+    if (unitsPerDrink === 0 || totalUnits === 0) return false;
+    if (currentUnits + toDrink < 0) return false;
+
+    return true;
+  };
+
   const drink = async ({ toDrink, isReset } = { toDrink: unitsPerDrink, isReset: false }) => {
-    if (unitsPerDrink === 0 || totalUnits === 0) return;
-    if (toDrink > 0 && currentUnits + toDrink > totalUnits) return;
-    if (currentUnits + toDrink < 0) return;
+    if (!isValidateForDrink(toDrink)) return;
+
+    if (toDrink > 0 && currentUnits + toDrink > totalUnits) toDrink = totalUnits - currentUnits;
 
     await setInProgress(true);
 
