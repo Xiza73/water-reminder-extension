@@ -1,5 +1,5 @@
 import { useStorageSuspense, useTheme, withErrorBoundary, withSuspense } from '@extension/shared';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NumberInput } from './components/Form/NumberInput';
 import { SelectInput } from './components/Form/SelectInput';
 import { clearAlarm, createAlarm, exampleThemeStorage, optionsStorage } from '@extension/storage';
@@ -34,10 +34,23 @@ const Options = () => {
   const [totalUnits, setTotalUnits] = useState(storage.totalUnits.toString());
   const [reminderStatus, setReminderStatus] = useState(storage.isReminderActive ? ACTIVE : INACTIVE);
   const [remindEvery, setRemindEvery] = useState(storage.remindEvery.toString());
+  const [disableSave, setDisableSave] = useState(true);
 
   const [age, setAge] = useState('0');
   const [weight, setWeight] = useState('0');
   const [recommendedUnits, setRecommendedUnits] = useState(0);
+
+  useEffect(() => {
+    setDisableSave(
+      unit === storage.unit &&
+        unitsPerDrink === storage.unitsPerDrink.toString() &&
+        totalUnits === storage.totalUnits.toString() &&
+        reminderStatus === (storage.isReminderActive ? ACTIVE : INACTIVE) &&
+        remindEvery === storage.remindEvery.toString(),
+    );
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [unit, unitsPerDrink, totalUnits, reminderStatus, remindEvery]);
 
   const handleSave = async () => {
     await optionsStorage.setState({
@@ -70,6 +83,7 @@ const Options = () => {
     water = Math.round(water * 100) / 100;
 
     setRecommendedUnits(water);
+    setTotalUnits(water.toString());
   };
 
   return (
@@ -114,7 +128,7 @@ const Options = () => {
           />
         )}
 
-        <IconButton icon="" name="Save" isLight={isLight} onClick={handleSave} />
+        <IconButton icon="" name="Save" isLight={isLight} onClick={handleSave} isDisabled={disableSave} />
       </div>
       <div
         className={cn(
@@ -126,16 +140,22 @@ const Options = () => {
         <NumberInput label="Age" placeholder="Your age" value={age} setValue={setAge} />
         <NumberInput label="Weight (Kg)" placeholder="Your weight" value={weight} isDecimal setValue={setWeight} />
 
-        <IconButton icon="" name="Calculate" isLight={isLight} onClick={handleCalculate} />
+        <IconButton
+          icon=""
+          name="Calculate"
+          isLight={isLight}
+          onClick={handleCalculate}
+          isDisabled={age === '0' || weight === '0'}
+        />
 
         {Boolean(recommendedUnits) && (
           <div className="text-base">
-            <p className="font-bold">You should drink:</p>
+            <p className="font-bold">You should drink approximately:</p>
             <p>
               <span className={cn('font-semibold')}>
                 {recommendedUnits} {storage.unit}
               </span>{' '}
-              of water.
+              of water daily.
             </p>
           </div>
         )}
